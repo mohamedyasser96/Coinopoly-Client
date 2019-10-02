@@ -26,6 +26,28 @@ export default class App extends Component {
     };
 
     }
+    async registerUser(){
+      try { 
+       let result = await fetch('http://172.20.10.3:3000/players/insert', {
+       method: 'POST',
+       headers: {
+         Accept: 'application/json',
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({
+         userName: this.state.username,
+         gameCode: parseInt(this.state.code)
+       }),
+       
+       
+     });
+     console.log(result);
+   } catch (error) {
+       console.log(error);
+       console.log('aywaaa')
+     };
+     this.props.navigation.navigate("Main")
+   }
     genCode(){
         var x = Math.floor((Math.random() * 100000) + 1).toString();
         this.setState({ code: x })
@@ -38,11 +60,13 @@ export default class App extends Component {
 
     if(this.state.fontLoaded)
       return (
-        <ImageBackground source={require("../assets/images/screen2.png")} style={{width: '100%', height: '90%'}}>
+        <ImageBackground source={require("../assets/images/screen2.png")} style={styles.root}>
             <TextInput style={styles.textinput} placeholder={"username"} placeholderTextColor='#696463' onChangeText={(username) => this.setState({username})}
               value={this.state.username}/>
             <Text style={styles.text}> {this.state.code}</Text>
             <Button style={styles.button1} onPress={() => {this.genCode()}}><Text style={styles.btntext}>GENERATE CODE</Text></Button>
+            <Button style={styles.button2} onPress={() => {this.registerUser()}}><Text style={styles.btntext}>Start</Text></Button>
+
         </ImageBackground>
       );
     else
@@ -51,17 +75,24 @@ export default class App extends Component {
 }
 
 const styles = StyleSheet.create({
+  root: {
+    width: '100%', 
+    height: '90%',
+    alignItems: 'center',
+    // justifyContent: 'center',
+  },
     button1: {
       
         // flex: 1,
         backgroundColor:'#5ECACA',
        width: 140,
-       marginLeft:'33%',
+      //  marginLeft:'33%',
        borderRadius:20,
-       top:'150%',
+       top:'130%',
        alignItems: 'center',
        justifyContent: 'center',
     },
+
     btntext: {
         color: "#ffffff",
         // fontSize: 26,
@@ -70,7 +101,9 @@ const styles = StyleSheet.create({
       },
       text: {
         color: "#696463",
-        marginLeft:'40%',
+        // marginLeft:'40%',
+        alignItems: 'center',
+       justifyContent: 'center',
         top:'50%',
         fontSize: 26,
         fontFamily: "roboto-light",
@@ -81,14 +114,19 @@ const styles = StyleSheet.create({
         // flex: 1,
         backgroundColor:'#5ECACA',
        width: 120,
-       marginLeft:'50%',
-       top:'150%',
+       borderRadius:20,
+      //  marginLeft:'50%',
+      alignItems: 'center',
+       justifyContent: 'center',
+       top:'140%',
        alignItems: 'center',
        justifyContent: 'center',
     },
     textinput:{
-        alignSelf: 'stretch',
-        marginLeft:'40%',
+        // alignSelf: 'stretch',
+        // marginLeft:'40%',
+        alignItems: 'center',
+       justifyContent: 'center',
         height: 40,
         top:'35%',
         marginBottom: 30,
