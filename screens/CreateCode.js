@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingView, TouchableOpacity, Image, AsyncStorage } from "react-native";
+// import AsyncStorage from '@react-native-community/async-storage';
 import { Button } from 'native-base';
 import * as Font from 'expo-font';
 
@@ -28,7 +29,7 @@ export default class App extends Component {
     }
     async registerUser(){
       try { 
-       let result = await fetch('http://172.20.10.3:3000/players/insert', {
+       let result = await fetch('http://192.168.1.10:3000/players/insert', {
        method: 'POST',
        headers: {
          Accept: 'application/json',
@@ -42,6 +43,8 @@ export default class App extends Component {
        
      });
      console.log(result);
+     await AsyncStorage.setItem('username', this.state.username);
+     await AsyncStorage.setItem('gamecode', this.state.code);
    } catch (error) {
        console.log(error);
        console.log('aywaaa')

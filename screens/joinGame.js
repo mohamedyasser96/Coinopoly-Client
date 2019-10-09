@@ -26,6 +26,31 @@ export default class App extends Component {
     };
 
     }
+
+    async joinGame(){
+      try { 
+       let result = await fetch('http://192.168.1.10:3000/players/insert', {
+       method: 'POST',
+       headers: {
+         Accept: 'application/json',
+         'Content-Type': 'application/json',
+       },
+       body: JSON.stringify({
+         userName: this.state.username,
+         gameCode: parseInt(this.state.code)
+       }),
+       
+       
+     });
+     console.log(result);
+     await AsyncStorage.setItem('username', this.state.username);
+     await AsyncStorage.setItem('gamecode', this.state.code);
+   } catch (error) {
+       console.log(error);
+       console.log('aywaaa')
+     };
+     this.props.navigation.navigate("Main")
+   }
     genCode(){
         var x = Math.floor((Math.random() * 100000) + 1).toString();
         this.setState({ code: x })
@@ -43,7 +68,7 @@ export default class App extends Component {
               value={this.state.username}/>
             <TextInput style={styles.text} onChangeText={(code) => this.setState({code})}
               value={this.state.code}/>
-            <Button transparent style={styles.button1} onPress={() => {this.props.navigation.navigate("Main")}}><Text style={styles.btntext}>JOIN GAME</Text></Button>
+            <Button transparent style={styles.button1} onPress={() => {this.joinGame()}}><Text style={styles.btntext}>JOIN GAME</Text></Button>
         </ImageBackground>
       );
     else

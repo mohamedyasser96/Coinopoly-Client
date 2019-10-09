@@ -22,6 +22,7 @@ export default class App extends Component {
     async componentDidMount() {
         await Font.loadAsync({
           'roboto-light': require('../assets/fonts/Roboto/Roboto-Light.ttf'),
+          'roboto-bold': require('../assets/fonts/Roboto/Roboto-Bold.ttf')
         });
         this.setState({ fontLoaded: true });
       }
@@ -32,8 +33,8 @@ export default class App extends Component {
     if(this.state.fontLoaded)
       return (
         <ImageBackground source={require("../assets/images/screen1.png")} style={{width: '100%', height: '90%'}}>
-            <Button style={styles.button1} onPress={() => {this.props.navigation.navigate("Code")}}><Text style={styles.btntext}>Start Game</Text></Button>
-            <Button style={styles.button2} onPress={() => {this.props.navigation.navigate("Join")}}><Text style={styles.btntext}>Join Game</Text></Button>
+            <Button style={styles.button1} onPress={() => {this.props.navigation.navigate("Code")}}><Text style={styles.btntext}>START GAME</Text></Button>
+            <Button style={styles.button2} onPress={() => {this.props.navigation.navigate("Join")}}><Text style={styles.btntext}>JOIN GAME</Text></Button>
         </ImageBackground>
       );
     else
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     btntext: {
         color: "#ffffff",
         // fontSize: 26,
-        fontFamily: "roboto-light",
+        fontFamily: "roboto-bold",
         // fontWeight: "bold",
       },
     button2: {
