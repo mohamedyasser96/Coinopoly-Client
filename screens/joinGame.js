@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingView, TouchableOpacity } from "react-native";
+import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingView, TouchableOpacity, AsyncStorage } from "react-native";
 import { Button } from 'native-base';
 import * as Font from 'expo-font';
 
@@ -63,7 +63,7 @@ export default class App extends Component {
 
     if(this.state.fontLoaded)
       return (
-        <ImageBackground source={require("../assets/images/join.png")} style={{width: '100%', height: '90%'}}>
+        <ImageBackground source={require("../assets/images/joinGame.png")} style={{width: '100%', height: '90%'}}>
             <TextInput style={styles.textinput} placeholder={"username"} placeholderTextColor='#696463' onChangeText={(username) => this.setState({username})}
               value={this.state.username}/>
             <TextInput style={styles.text} onChangeText={(code) => this.setState({code})}

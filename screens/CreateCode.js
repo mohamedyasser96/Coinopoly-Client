@@ -4,6 +4,8 @@ import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingVi
 import { Button } from 'native-base';
 import * as Font from 'expo-font';
 
+const ip = "http://192.168.1.10:3000"
+
 
 export default class App extends Component {
     static navigationOptions ={
@@ -29,7 +31,7 @@ export default class App extends Component {
     }
     async registerUser(){
       try { 
-       let result = await fetch('http://192.168.1.10:3000/players/insert', {
+       let result = await fetch(ip +'/players/insert', {
        method: 'POST',
        headers: {
          Accept: 'application/json',
@@ -63,12 +65,12 @@ export default class App extends Component {
 
     if(this.state.fontLoaded)
       return (
-        <ImageBackground source={require("../assets/images/screen2.png")} style={styles.root}>
+        <ImageBackground source={require("../assets/images/newGame.png")} style={styles.root}>
             <TextInput style={styles.textinput} placeholder={"username"} placeholderTextColor='#696463' onChangeText={(username) => this.setState({username})}
               value={this.state.username}/>
             <Text style={styles.text}> {this.state.code}</Text>
-            <Button style={styles.button1} onPress={() => {this.genCode()}}><Text style={styles.btntext}>GENERATE CODE</Text></Button>
-            <Button style={styles.button2} onPress={() => {this.registerUser()}}><Text style={styles.btntext}>Start</Text></Button>
+            <Button transparent style={styles.button1} onPress={() => {this.genCode()}}><Text style={styles.btntext}>GENERATE CODE</Text></Button>
+            <Button style={styles.button2} onPress={() => {this.registerUser()}}><Text style={styles.btntext}>START!</Text></Button>
 
         </ImageBackground>
       );
@@ -87,7 +89,7 @@ const styles = StyleSheet.create({
     button1: {
       
         // flex: 1,
-        backgroundColor:'#5ECACA',
+        // backgroundColor:'#5ECACA',
        width: 140,
       //  marginLeft:'33%',
        borderRadius:20,
@@ -99,7 +101,7 @@ const styles = StyleSheet.create({
     btntext: {
         color: "#ffffff",
         // fontSize: 26,
-        fontFamily: "roboto-light",
+        fontFamily: "roboto-bold",
         // fontWeight: "bold",
       },
       text: {
@@ -107,7 +109,7 @@ const styles = StyleSheet.create({
         // marginLeft:'40%',
         alignItems: 'center',
        justifyContent: 'center',
-        top:'50%',
+        top:'49%',
         fontSize: 26,
         fontFamily: "roboto-light",
         // fontWeight: "bold",
@@ -116,8 +118,8 @@ const styles = StyleSheet.create({
       
         // flex: 1,
         backgroundColor:'#5ECACA',
-       width: 120,
-       borderRadius:20,
+       width: 140,
+       borderRadius:10,
       //  marginLeft:'50%',
       alignItems: 'center',
        justifyContent: 'center',
@@ -127,7 +129,8 @@ const styles = StyleSheet.create({
     },
     textinput:{
         // alignSelf: 'stretch',
-        // marginLeft:'40%',
+        marginLeft:'40%',
+        alignSelf: 'stretch',
         alignItems: 'center',
        justifyContent: 'center',
         height: 40,

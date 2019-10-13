@@ -11,9 +11,8 @@ import * as Font from 'expo-font';
 
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-// redux stuff
-import { createStore } from 'redux'
-import { roller, init } from './reducer'
+
+const ip = "http://192.168.1.10:3000"
 
 export default class HomeScreen extends Component
 {
@@ -34,7 +33,9 @@ export default class HomeScreen extends Component
     turn: true,
     qrCode: '',
     rolled: false,
-    turn: false
+    turn: false,
+    player: {},
+    cardText: ''
                     
   };
 
@@ -43,7 +44,7 @@ export default class HomeScreen extends Component
   async getPlayer(){
 
       try{
-        await fetch("http://192.168.1.10:3000/players/getPlayer", {
+        await fetch(ip + "/players/getPlayer", {
                 method: "POST",
                 headers: {
                   Accept: "application/json",
@@ -54,10 +55,12 @@ export default class HomeScreen extends Component
                 })
               })
                 .then(response => response.text())
-                .then(responseJson => {
+                .then(async responseJson => {
                   responseJson = JSON.parse(responseJson)
-                  console.log(Object.keys(responseJson));
+                  console.log("sssss", responseJson.response);
+                  this.setState({player: responseJson.response})
                   this.setState({turn: responseJson.response.turn})
+                  await AsyncStorage.setItem("balance", responseJson.response.balance.toString())
                 })
                 .catch(error => {
                   console.error(error);
@@ -65,12 +68,11 @@ export default class HomeScreen extends Component
       }catch(err){
         console.log(err)
       }
-        this.props.navigation.navigate("Main")
- }
- async getPlayers(){
+  }
+  async getPlayers(){
 
   try{
-    await fetch("http://192.168.1.10:3000/players/getAllPlayers", {
+    await fetch(ip + "/players/getAllPlayers", {
             method: "POST",
             headers: {
               Accept: "application/json",
@@ -91,7 +93,38 @@ export default class HomeScreen extends Component
   }catch(err){
     console.log(err)
   }
-    this.props.navigation.navigate("Main")
+  }
+
+  handleCardLogic(val){
+    if(val != null){
+      //update balance
+      console.log(parseInt(val))
+    }
+  }
+
+  async getChance(){
+
+    try{
+      await fetch(ip + "/getChance", {
+              method: "GET",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+            })
+              .then(response => response.text())
+              .then(async responseJson => {
+                responseJson = JSON.parse(responseJson)
+                console.log("cccc", responseJson.response);
+                this.setState({cardText: responseJson.response.text})
+                this.handleCardLogic(responseJson.response.action)
+              })
+              .catch(error => {
+                console.error(error);
+              });
+    }catch(err){
+      console.log(err)
+    }
 }
 
   rollDice(){
@@ -99,7 +132,7 @@ export default class HomeScreen extends Component
     this.setState({ diceValue: x })
     this.setState({rolled: true})
     var delayInMilliseconds = 5000; //1 second
-  
+
     setTimeout(function() {
       //your code to be executed after 1 second
 
@@ -115,17 +148,22 @@ export default class HomeScreen extends Component
     this.setState({username: un})
     this.setState({code: gc})
     this.getPermissionsAsync();
+    await this.getPlayer()
     // await Font.loadAsync({
     //   'roboto-bold': require('../assets/fonts/Roboto/Roboto-Bold.ttf'),
     // });
     // this.setState({ fontLoaded: true });
 
 
-    setInterval(() => (
-      this.getPlayer()), 5000);
+    // setInterval(async () =>  (
+    //   await this.getPlayer()), 5000);
+    // try{
+    //   setInterval(async () =>  (
+    //       await this.getPlayer()), 5000);
 
-    setInterval(() => (
-        this.getPlayers()), 5000);
+    // }catch(err){
+    //   console.log(err)
+    // }
 
     
 
@@ -147,7 +185,7 @@ export default class HomeScreen extends Component
     this.setState({ scanMode: true });
   }
   render(){
-    const { hasCameraPermission, scanned } = this.state;
+    const { hasCameraPermission } = this.state;
 
     if (hasCameraPermission === null) {
       return <Text>Requesting for camera permission</Text>;
@@ -159,17 +197,17 @@ export default class HomeScreen extends Component
     
       if(!this.state.scanMode && !this.state.rollMode)
         return (
-          <ImageBackground source={require("../assets/images/homescreen.png")} style={styles.root}>
+          <ImageBackground source={require("../assets/images/home5.png")} style={styles.root}>
               <Text style={styles.text}>{this.state.username + "'s"} </Text>
               <Text style={styles.text2}>TURN</Text>
-              <Button transparent style={styles.button3} onPress={() => {this.props.navigation.navigate("Code")}}><Text style={styles.btntext} >BUY PROPERTY</Text></Button>
+              <Button transparent style={styles.button3} onPress={() => {this.props.navigation.navigate("Prop")}}><Text style={styles.btntext} >BUY PROPERTY</Text></Button>
               <Button transparent style={styles.button2} onPress={() => {this.changeTurn()}}><Text style={styles.btntext} >PAY RENT</Text></Button>
-              <Button transparent style={styles.button1} onPress={() => {this.setScanMode()}}><Text style={styles.btntext} >SCAN CARD</Text></Button>
+              <Button transparent style={styles.button1} onPress={() => {this.setScanMode()}}><Text style={styles.btntext} ></Text></Button>
           </ImageBackground>
         );
-      if(this.state.rollMode){
+      if(this.state.rollMode && !this.state.scanMode){
         return (
-          <ImageBackground source={require("../assets/images/rollscreen.png")} style={styles.root}>
+          <ImageBackground source={require("../assets/images/roll2.png")} style={styles.root}>
               <Text style={styles.text}>{this.state.username + "'s"} </Text>
               <Text style={styles.text2}>TURN</Text>
               <Text style={styles.rolltxt}>{this.state.diceValue}</Text>
@@ -179,7 +217,7 @@ export default class HomeScreen extends Component
         )
       }
       else
-      if(this.state.scanMode)
+      if(this.state.scanMode && !this.state.rollMode)
         return (
           <View
             style={{
@@ -188,40 +226,46 @@ export default class HomeScreen extends Component
               justifyContent: 'flex-end',
             }}>
             <BarCodeScanner
-              onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
+              onBarCodeScanned={this.state.scanned ? undefined : this.handleBarCodeScanned}
               style={StyleSheet.absoluteFillObject}
             />
     
-            {scanned && (
-              // <View style={styles.container}>
+            {/* {this.state.scanned && (
+              // <View style={styles.container}> */}
               <Dialog
-              visible={this.state.scanMode}
-              dialogTitle={<DialogTitle title="Dialog Title" />}
-              style={{marginTop: '40%'}}
+              visible={this.state.scanned}
+              dialogTitle={<DialogTitle title="Chance" />}
+              style={styles.DialogStyle}
               width= '0.8'
               height='50%'
               >
-                <DialogContent>
-                  <ImageBackground source={require("../assets/images/popup.png")} style={{width: '80%', height: '50%'}}></ImageBackground>
-                  <Button title={'Exit'} onPress={() => this.endScan()} />
+                <DialogContent style={styles.DialogStyle}>
+                  {/* <ImageBackground source={require("../assets/images/popup.png")} style={{width: '80%', height: '50%'}}></ImageBackground> */}
+                  <Text style={styles.cardtxt}>{this.state.cardText}</Text>
+                  <Button style={styles.cardbtn} onPress={() => {this.endScan()}}><Text style={styles.cardbtntxt}>OK!</Text></Button>
                 </DialogContent>
               </Dialog>
-            // </View>
-            )}
           </View>
+          //   )}
+          // </View>
         );
 
   }
 
-  endScan(){
-    this.setState({ scanMode: false })
-    this.setState({ scanned: false })
+  async endScan(){
+    // await this.setState({ scanMode: false })
+    await this.setState({ scanned: false })
+    console.log("yo", this.state.scanned)
   }
 
   handleBarCodeScanned = ({ type, data }) => {
     this.setState({ scanned: true });
+    console.log("jajgajhaj")
     // alert(`Bar code with type ${type} and data ${data} has been scanned!`);
     this.state.qrCode = data
+    if(data === 'Chance')
+      this.getChance()
+
     console.log(this.state.qrCode)
   };
         
@@ -237,10 +281,36 @@ const styles = StyleSheet.create({
       // backgroundColor:'#5ECACA',
      width: 120,
     //  marginLeft:'35%',
-     top:'130%',
+     top:'110%',
      alignItems: 'center',
      justifyContent: 'center',
   },
+  DialogStyle:{
+    marginTop: '40%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardtxt:{
+    fontFamily: 'roboto-bold',
+    fontSize: 20,
+    color: '#3014AC'
+
+  },
+  cardbtn:{
+    borderRadius: 10,
+    backgroundColor:'#3014AC',
+    width: 50,
+    height: 30,
+    //  marginLeft:'35%',
+    // top:'110%',
+    marginTop: '20%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardbtntxt:{
+    fontFamily: 'roboto-bold',
+    color: '#FFFFFF',
+    },
   root: {
     width: '100%', 
     height: '100%',
@@ -254,7 +324,7 @@ const styles = StyleSheet.create({
     // backgroundColor:'#5ECACA',
    width: 140,
   //  marginLeft:'35%',
-   top:'60%',
+   top:'61%',
    alignItems: 'center',
    justifyContent: 'center',
    textAlign: 'center',
@@ -276,7 +346,7 @@ const styles = StyleSheet.create({
     rolltxt:
     {
       fontFamily: "roboto-bold",
-      top:'40%',
+      top:'47%',
       fontSize: 70,
       textAlign: 'center',
       color:'#ffffff'
@@ -307,7 +377,7 @@ const styles = StyleSheet.create({
     
     width: 140,
     //  marginLeft:'35%',
-     top:'65%',
+     top:'67%',
      alignItems: 'center',
      justifyContent: 'center',
      textAlign: 'center',

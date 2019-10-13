@@ -1,8 +1,10 @@
 import React, { Component }  from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ImageBackground } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ImageBackground, AsyncStorage } from 'react-native';
+import { Button } from 'native-base';
 import { Accelerometer } from 'expo-sensors';
 import { DeviceMotion } from 'expo-sensors';
 
+const ip = "http://192.168.1.10:3000"
 
 export default class BalanceScreen extends Component {
 
@@ -13,27 +15,61 @@ export default class BalanceScreen extends Component {
   
   state = {
     username: '',
-    balance: '500',
+    balance: '0',
     fontLoaded: false,
   };
 
+  async updateBalance(){
+    this.getPlayer()
+  }
+
+  async getPlayer(){
+
+    try{
+      await fetch(ip + "/players/getPlayer", {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userName: await AsyncStorage.getItem('username'),
+              })
+            })
+              .then(response => response.text())
+              .then(async responseJson => {
+                responseJson = JSON.parse(responseJson)
+                console.log("sssss", responseJson.response);
+                this.setState({balance: responseJson.response.balance})
+              })
+              .catch(error => {
+                console.error(error);
+              });
+    }catch(err){
+      console.log(err)
+    }
+}
+
   async componentDidMount() {
+    // this.state.balance = await AsyncStorage.getItem("balance")
     // await Font.loadAsync({
     //   'roboto-bold': require('../assets/fonts/Roboto/Roboto-Bold.ttf'),
     // });
     // console.log(this.state.fontLoaded)
     // this.setState({ fontLoaded: true });
-
-
+    setInterval( () =>  (
+      this.updateBalance()), 5000);
   }
+
   
   
   
   render() {
     // if(this.state.fontLoaded)
       return (
-        <ImageBackground source={require("../assets/images/balanceScreen.png")} style={styles.root}>
+        <ImageBackground source={require("../assets/images/balanceScreen2.png")} style={styles.root}>
             <Text style={styles.text}> {this.state.balance}</Text>
+            {/* <Button style={styles.button3} onPress={() => {this.updateBalance()}}><Text style={styles.btntext}>Refresh</Text></Button> */}
         </ImageBackground>
       );
 
@@ -57,4 +93,21 @@ const styles = StyleSheet.create({
     fontFamily: "roboto-bold",
     // fontWeight: "bold",
   },
+  button3: {
+      
+    // flex: 1,
+  borderRadius: 10,
+  backgroundColor:'#5ECACA',
+   width: 100,
+  //  marginLeft:'22%',
+   top:'110%',
+   alignItems: 'center',
+   justifyContent: 'center',
+},
+btntext: {
+  color: "#ffffff",
+  // fontSize: 26,
+  fontFamily: "roboto-bold",
+  // fontWeight: "bold",
+},
 });
