@@ -4,7 +4,7 @@ import { Button } from 'native-base';
 import { Accelerometer } from 'expo-sensors';
 import { DeviceMotion } from 'expo-sensors';
 
-const ip = "http://192.168.1.10:3000"
+const ip = "http://10.40.51.51:3000"
 
 export default class BalanceScreen extends Component {
 

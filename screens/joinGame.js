@@ -29,7 +29,7 @@ export default class App extends Component {
 
     async joinGame(){
       try { 
-       let result = await fetch('http://192.168.1.10:3000/players/insert', {
+       let result = await fetch('http://10.40.51.51:3000/players/insert', {
        method: 'POST',
        headers: {
          Accept: 'application/json',

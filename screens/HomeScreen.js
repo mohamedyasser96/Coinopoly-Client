@@ -12,7 +12,7 @@ import * as Font from 'expo-font';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
-const ip = "http://192.168.1.10:3000"
+const ip = "http://10.40.51.51:3000"
 
 export default class HomeScreen extends Component
 {

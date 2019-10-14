@@ -7,6 +7,7 @@ import JoinScreen from "./screens/joinGame.js"
 import ScanQR from "./screens/scanQR"
 // import SecondScreen from "./app/components/Register"
 import MainScreen from "./screens/Tabs"
+import Props from "./screens/LinksScreen.js"
 
 
 
@@ -15,7 +16,8 @@ import MainScreen from "./screens/Tabs"
     Code: {screen: CodeScreen},
     Join: {screen: JoinScreen},
     Main: {screen: MainScreen},
-    Scan: {screen: ScanQR}
+    Scan: {screen: ScanQR},
+    Prop: {screen: Props}
   },
     {
       headerMode: 'none',

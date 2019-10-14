@@ -4,7 +4,7 @@ import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingVi
 import { Button } from 'native-base';
 import * as Font from 'expo-font';
 
-const ip = "http://192.168.1.10:3000"
+const ip = "http://10.40.51.51:3000"
 
 
 export default class App extends Component {
@@ -65,7 +65,7 @@ export default class App extends Component {
 
     if(this.state.fontLoaded)
       return (
-        <ImageBackground source={require("../assets/images/newGame.png")} style={styles.root}>
+        <ImageBackground source={require("../assets/images/newGame3.png")} style={styles.root}>
             <TextInput style={styles.textinput} placeholder={"username"} placeholderTextColor='#696463' onChangeText={(username) => this.setState({username})}
               value={this.state.username}/>
             <Text style={styles.text}> {this.state.code}</Text>
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
        width: 140,
       //  marginLeft:'33%',
        borderRadius:20,
-       top:'130%',
+       top:'63%',
        alignItems: 'center',
        justifyContent: 'center',
     },
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
         // marginLeft:'40%',
         alignItems: 'center',
        justifyContent: 'center',
-        top:'49%',
+        top:'59%',
         fontSize: 26,
         fontFamily: "roboto-light",
         // fontWeight: "bold",

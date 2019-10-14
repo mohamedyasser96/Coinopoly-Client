@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableHighlight, Alert, ImageBackground } from 'react-native';
 import Constants from 'expo-constants';
-import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
+// import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
+import { Card, Icon } from 'react-native-elements';
 import { Button } from 'native-base';
-const ip = "http://192.168.1.10:3000"
+const ip = "http://10.40.51.51:3000"
 
 export default class PropertiesScreen extends React.Component {
   static navigationOptions ={
@@ -36,7 +37,9 @@ export default class PropertiesScreen extends React.Component {
     if(ans.correct === true){
       try{
         await this.buyProperty()
-        alert(`Answer ${ans.text} is correct, purchase successful!`);
+        alert(`Answer ${ans.text} is correct, purchase successful! 
+
+          Fun fact: The first official egyptian currency was minted and issued for circulation in 1836, Before the first official egyptian pound was minted, the main currency in circulation was the ‘Turkish qersh’. The first egyptian paper banknote was issued in April of 1899. It was worth 1 EGP = 0.97 GBP.`);
 
       }catch(err){
         alert(`Error ${err}!`);
@@ -157,28 +160,43 @@ export default class PropertiesScreen extends React.Component {
           
             {
               this.state.properties.map(property => (
-                <Card>
-                <CardImage 
-                  source={{uri: 'http://bit.ly/2GfzooV'}} 
+              //   <Card >
+              //   <CardImage 
+              //     source={{uri: 'http://bit.ly/2GfzooV'}} 
+              //     title={property.name}
+              //   />
+              //   <CardTitle
+              //     subtitle={"Value: "+ property.Value + "   Rent Value: " + property.rentValue}
+              //   />
+              //   <CardContent text={property.info} />
+              //   <CardAction 
+              //     separator={true} 
+              //     inColumn={false}>
+              //     <Button style={styles.button1} onPress={() => {this.handleLogic(property.id, property.Value)}} ><Text style={styles.btntext}>BUY</Text></Button>
+              //     <Button style={styles.button2} onPress={() => {this.rentProperty(property.id)}} disabled={!property.owner}><Text style={styles.btntext2}>RENT</Text></Button>
+              //   </CardAction>
+              // </Card>
+              <Card
                   title={property.name}
-                />
-                <CardTitle
-                  subtitle={"Value: "+ property.Value + "   Rent Value: " + property.rentValue}
-                />
-                <CardContent text={property.info} />
-                <CardAction 
-                  separator={true} 
-                  inColumn={false}>
-                  {/* <CardButton
-                    onPress={() => {}}
-                    title="Buy"
-                    color="#FEB557"
-                    disabled=''
-                  /> */}
-                  <Button style={styles.button1} onPress={() => {this.handleLogic(property.id, property.Value)}} ><Text style={styles.btntext}>BUY</Text></Button>
-                  <Button style={styles.button2} onPress={() => {this.rentProperty(property.id)}} disabled={!property.owner}><Text style={styles.btntext2}>RENT</Text></Button>
-                </CardAction>
-              </Card>
+                  image={{uri: 'http://bit.ly/2GfzooV'}}
+                  >
+
+                  <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.renttxt}>
+                        RENT VALUE
+                      </Text>
+                      <Text style={styles.rentVal}>
+                        {property.rentValue}
+                      </Text>
+                  </View>
+                  
+
+                  <View style={{ flexDirection: 'row' }}>
+                  
+                    <Button style={styles.button1} onPress={() => {this.handleLogic(property.id, property.Value)}} ><Text style={styles.btntext}>BUY</Text></Button>
+                    <Button style={styles.button2} onPress={() => {this.rentProperty(property.id)}} disabled={!property.owner}><Text style={styles.btntext}>RENT</Text></Button>
+                  </View>
+                </Card>
 
               ))
             }
@@ -253,11 +271,30 @@ root: {
 },
 questiontxt:{
   color: "#5ECACA",
-  fontSize: 20,
+  fontSize: 17,
   fontFamily: "roboto-light",
   marginTop: '20%',
-  marginLeft: '12%',
-  marginRight:'12%',
+  marginLeft: '15%',
+  marginRight:'15%',
+  marginBottom: '10%'
+},
+renttxt:{
+  color: "#62D7C5",
+  fontSize: 20,
+  fontFamily: "roboto-bold",
+  marginTop: '5%',
+  marginLeft: '5%',
+  marginRight: '50%', // marginRight:'15%',
+  marginBottom: '10%'
+},
+rentVal:{
+  color: "#62D7C5",
+  fontSize: 20,
+  fontFamily: "roboto-bold",
+  marginTop: '5%',
+  // alignSelf: 'flex-end'
+  // marginLeft: '5%',
+  // marginRight:'15%',
   marginBottom: '10%'
 },
 baltxt:{
@@ -286,8 +323,10 @@ answertxt:{
 button1: {
   
   // flex: 1,
-  backgroundColor:'#5ECACA',
-  width: 90,
+  backgroundColor:'#62D7C5',
+  marginRight: '8%',
+  width: 150,
+  height: 50,
 //  marginLeft:'33%',
   borderRadius:20,
 //  top:'130%',
@@ -298,7 +337,7 @@ button1: {
 btntext: {
     color: "#ffffff",
     fontSize: 18,
-    fontFamily: "roboto-light",
+    fontFamily: "roboto-bold",
     // fontWeight: "bold",
   },
 btntext2: {
@@ -320,12 +359,13 @@ text: {
 button2: {
   
     // flex: 1,
-  backgroundColor:'#FFFFFF',
-    width: 90,
+    backgroundColor:'#3014AC',
+    width: 150,
+    height: 50,
     borderRadius:20,
     borderColor: '#5ECACA',
   //  marginLeft:'50%',
-  alignItems: 'center',
+    alignItems: 'center',
     justifyContent: 'center',
     // top:'140%',
     // alignItems: 'center',
