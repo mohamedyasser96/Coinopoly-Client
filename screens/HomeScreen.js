@@ -12,7 +12,7 @@ import * as Font from 'expo-font';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 
-const ip = "http://10.40.51.51:3000"
+const ip = "http://192.168.1.10:3000"
 
 export default class HomeScreen extends Component
 {
@@ -33,7 +33,7 @@ export default class HomeScreen extends Component
     turn: true,
     qrCode: '',
     rolled: false,
-    turn: false,
+    turn: 'false',
     player: {},
     cardText: ''
                     
@@ -145,6 +145,8 @@ export default class HomeScreen extends Component
   async componentDidMount() {
     const un = await AsyncStorage.getItem("username")
     const gc = await AsyncStorage.getItem("gamecode")
+
+
     this.setState({username: un})
     this.setState({code: gc})
     this.getPermissionsAsync();
@@ -153,8 +155,10 @@ export default class HomeScreen extends Component
     //   'roboto-bold': require('../assets/fonts/Roboto/Roboto-Bold.ttf'),
     // });
     // this.setState({ fontLoaded: true });
-
-
+    var x
+    setInterval(async () =>  (
+      this.setState({turn: await AsyncStorage.getItem("turn")})), 2000)
+      
     // setInterval(async () =>  (
     //   await this.getPlayer()), 5000);
     // try{
@@ -194,7 +198,7 @@ export default class HomeScreen extends Component
       return <Text>No access to camera</Text>;
     }
 
-    
+    if(this.state.turn === 'true'){
       if(!this.state.scanMode && !this.state.rollMode)
         return (
           <ImageBackground source={require("../assets/images/home5.png")} style={styles.root}>
@@ -249,6 +253,17 @@ export default class HomeScreen extends Component
           //   )}
           // </View>
         );
+
+    }
+    else {
+      return(
+        <ImageBackground source={require("../assets/images/not_turn.png")} style={styles.root}>
+              <Text style={styles.text}>{"NOT YOUR"} </Text>
+              <Text style={styles.text2}>TURN</Text>
+          </ImageBackground>
+      );
+    }
+    
 
   }
 

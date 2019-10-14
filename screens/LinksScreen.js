@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableHighlight, Alert, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, AsyncStorage, Modal, TouchableHighlight, Alert, ImageBackground, Image } from 'react-native';
 import Constants from 'expo-constants';
 // import { Card, CardTitle, CardContent, CardAction, CardButton, CardImage } from 'react-native-cards';
 import { Card, Icon } from 'react-native-elements';
 import { Button } from 'native-base';
-const ip = "http://10.40.51.51:3000"
+const ip = "http://192.168.1.10:3000"
 
 export default class PropertiesScreen extends React.Component {
   static navigationOptions ={
@@ -37,6 +37,7 @@ export default class PropertiesScreen extends React.Component {
     if(ans.correct === true){
       try{
         await this.buyProperty()
+        await AsyncStorage.setItem("turn", "false")
         alert(`Answer ${ans.text} is correct, purchase successful! 
 
           Fun fact: The first official egyptian currency was minted and issued for circulation in 1836, Before the first official egyptian pound was minted, the main currency in circulation was the ‘Turkish qersh’. The first egyptian paper banknote was issued in April of 1899. It was worth 1 EGP = 0.97 GBP.`);
@@ -178,9 +179,12 @@ export default class PropertiesScreen extends React.Component {
               // </Card>
               <Card
                   title={property.name}
-                  image={{uri: 'http://bit.ly/2GfzooV'}}
+                  image={{uri: property.url}}
                   >
-
+                      <Image source={require("../assets/images/valIcon.png")} style={{marginLeft: '25%'}}></Image>
+                    <View style={{position: 'absolute', top: '18%', left: '10%', right: 0, bottom: 0, alignItems: 'center'}}>
+                      <Text style={{color: '#FFFFFF', fontFamily: 'roboto-bold', fontSize: '18'}}>{property.Value}</Text>
+                    </View>
                   <View style={{ flexDirection: 'row' }}>
                       <Text style={styles.renttxt}>
                         RENT VALUE
@@ -205,21 +209,29 @@ export default class PropertiesScreen extends React.Component {
 
             {
               this.state.myProperties.map(property => (
-                <Card>
-                <CardImage 
-                  source={{uri: 'http://bit.ly/2GfzooV'}} 
+                <Card
                   title={property.name}
-                />
-                <CardTitle
-                  subtitle={"Value: "+ property.Value + "   Rent Value: " + property.rentValue}
-                />
-                <CardContent text={property.info} />
-                <CardAction 
-                  separator={true} 
-                  inColumn={false}>
-                  <Button style={styles.button1} onPress={() => {this.handleLogic(property.id, property.Value)}} ><Text style={styles.btntext}>SELL</Text></Button>
-                </CardAction>
-              </Card>
+                  image={{uri: property.url}}
+                  >
+                      <Image source={require("../assets/images/valIcon.png")} style={{marginLeft: '25%'}}></Image>
+                    <View style={{position: 'absolute', top: '18%', left: '10%', right: 0, bottom: 0, alignItems: 'center'}}>
+                      <Text style={{color: '#FFFFFF', fontFamily: 'roboto-bold', fontSize: '18'}}>{property.Value}</Text>
+                    </View>
+                  <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.renttxt}>
+                        RENT VALUE
+                      </Text>
+                      <Text style={styles.rentVal}>
+                        {property.rentValue}
+                      </Text>
+                  </View>
+                  
+
+                  <View style={{ flexDirection: 'row' }}>
+                  
+                    <Button style={styles.button1} onPress={() => {this.handleLogic(property.id, property.Value)}} ><Text style={styles.btntext}>SELL</Text></Button>
+                  </View>
+                </Card>
 
               ))
             }

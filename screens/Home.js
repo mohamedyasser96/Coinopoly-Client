@@ -43,7 +43,7 @@ export default class App extends Component {
     if(this.state.fontLoaded)
       return (
         <ImageBackground source={require("../assets/images/landing2.png")} style={{width: '100%', height: '90%'}}>
-            <Button transparent style={styles.button1} onPress={() => {this.props.navigation.navigate("Prop")}}><Text style={styles.btntext2}>START GAME</Text></Button>
+            <Button transparent style={styles.button1} onPress={() => {this.props.navigation.navigate("Code")}}><Text style={styles.btntext2}>START GAME</Text></Button>
             <Button transparent style={styles.button2} onPress={() => {this.props.navigation.navigate("Join")}}><Text style={styles.btntext}>JOIN GAME</Text></Button>
             <Button transparent style={styles.button3} onPress={() => {this.handleClick()}}><Text style={styles.btntext2}>INSTRUCTIONS</Text></Button>
         </ImageBackground>

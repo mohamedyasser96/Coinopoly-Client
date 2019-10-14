@@ -4,7 +4,7 @@ import { Alert, TextInput, StyleSheet, Text, ImageBackground, KeyboardAvoidingVi
 import { Button } from 'native-base';
 import * as Font from 'expo-font';
 
-const ip = "http://10.40.51.51:3000"
+const ip = "http://192.168.1.10:3000"
 
 
 export default class App extends Component {
@@ -25,6 +25,7 @@ export default class App extends Component {
       this.state = { username: '',
       code: '',
       fontLoaded: false,
+      codeGenerated: false
                       
     };
 
@@ -47,6 +48,7 @@ export default class App extends Component {
      console.log(result);
      await AsyncStorage.setItem('username', this.state.username);
      await AsyncStorage.setItem('gamecode', this.state.code);
+     await AsyncStorage.setItem('turn', 'true');
    } catch (error) {
        console.log(error);
        console.log('aywaaa')
@@ -56,6 +58,7 @@ export default class App extends Component {
     genCode(){
         var x = Math.floor((Math.random() * 100000) + 1).toString();
         this.setState({ code: x })
+        this.setState({ codeGenerated: true })
         console.log(this.state.code)
     }
 
@@ -70,7 +73,7 @@ export default class App extends Component {
               value={this.state.username}/>
             <Text style={styles.text}> {this.state.code}</Text>
             <Button transparent style={styles.button1} onPress={() => {this.genCode()}}><Text style={styles.btntext}>GENERATE CODE</Text></Button>
-            <Button style={styles.button2} onPress={() => {this.registerUser()}}><Text style={styles.btntext}>START!</Text></Button>
+            <Button style={styles.button2} onPress={() => {this.registerUser()}} disabled={!this.state.codeGenerated}><Text style={styles.btntext}>START!</Text></Button>
 
         </ImageBackground>
       );
@@ -117,7 +120,7 @@ const styles = StyleSheet.create({
     button2: {
       
         // flex: 1,
-        backgroundColor:'#5ECACA',
+        backgroundColor:'#62D7C5',
        width: 140,
        borderRadius:10,
       //  marginLeft:'50%',
